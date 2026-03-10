@@ -1,13 +1,14 @@
-# Home-Network-Monitoring-DNS-Security-Lab
-Triển khai hệ thống giám sát mạng gia đình, lọc DNS và cảnh báo sự cố qua Telegram.
+Home-Network-Monitoring-DNS-Security-Lab
 
-### Giới thiệu dự án
+Dự án triển khai hệ thống giám sát mạng gia đình, lọc DNS và cảnh báo sự cố qua Telegram.
+
+Giới thiệu dự án
 
 Dự án này xây dựng một hệ thống giám sát và bảo mật mạng gia đình bằng cách kết hợp các công cụ monitoring, DNS filtering và hệ thống cảnh báo tự động.
 
-Lab được triển khai trên máy ảo nhằm mô phỏng một hệ thống monitoring nhỏ giống môi trường doanh nghiệp.
+Lab được triển khai trên máy ảo nhằm mô phỏng một hệ thống monitoring nhỏ tương tự môi trường doanh nghiệp.
 
-Mục tiêu của dự án:
+Mục tiêu của dự án
 
 Giám sát trạng thái thiết bị mạng
 
@@ -19,60 +20,92 @@ Hiển thị dashboard giám sát trực quan
 
 Gửi cảnh báo tự động khi có sự cố
 
-## Công nghệ sử dụng
+Công nghệ sử dụng
 
-Pi-hole — chặn quảng cáo và lọc DNS trong mạng nội bộ
+Pi-hole – chặn quảng cáo và lọc DNS trong mạng nội bộ
 
-PRTG Network Monitor — giám sát thiết bị mạng
+PRTG Network Monitor – giám sát thiết bị mạng
 
-Grafana — tạo dashboard giám sát hệ thống
+Grafana – tạo dashboard giám sát hệ thống
 
-Telegram Bot — gửi thông báo cảnh báo
+Telegram Bot – gửi thông báo cảnh báo
 
-VMware / VirtualBox — môi trường ảo hóa
+VMware / VirtualBox – môi trường ảo hóa
 
-## Môi trường Lab
+Cấu trúc repository
+
+diagrams/ : Sơ đồ kiến trúc hệ thống
+
+configs/ : File cấu hình hệ thống monitoring
+
+docs/ : Tài liệu tổng quan hệ thống
+
+install/ : Hướng dẫn cài đặt và cấu hình
+
+Môi trường Lab
 
 Hệ thống được triển khai bằng 2 máy ảo.
 
 Máy ảo	Hệ điều hành	Mục đích
-Ubuntu Server	Linux	chạy Pi-hole và Grafana
-Windows	Windows 10	chạy PRTG Monitoring
-
-Tài nguyên sử dụng:
-
+Ubuntu Server	Linux	Chạy Pi-hole và Grafana
+Windows	Windows 10	Chạy PRTG Monitoring
+Tài nguyên sử dụng
 Tài nguyên	Dung lượng
 RAM	~4GB
 Disk	~35GB
 Số VM	2
-## Kiến trúc hệ thống
-Internet
-   │
-Home Router
-   │
-Virtual Network
-   │
- ┌───────────────┬───────────────┐
- │               │
-Ubuntu Server   Windows Machine
-│               │
-├─ Pi-hole      └─ PRTG Network Monitor
-└─ Grafana
-        │
-        ▼
-   Telegram Alert
-### Chức năng hệ thống
-## Giám sát mạng (Network Monitoring)
+Kiến trúc hệ thống
 
-PRTG được sử dụng để giám sát:
+Hệ thống được thiết kế theo mô hình giám sát mạng đơn giản gồm các thành phần:
+
+Internet
+
+Home Router
+
+Virtual Network
+
+Monitoring Server
+
+DNS Filtering Server
+
+Alert System
+
+Sơ đồ kiến trúc được lưu tại:
+
+diagrams/network_architecture.png
+
+Pi-hole hoạt động như DNS server nội bộ trong mạng.
+
+Chức năng:
+
+chặn quảng cáo toàn mạng
+
+chặn domain tracking
+
+ghi log DNS query
+
+Ví dụ các domain bị block:
+
+ads.google.com
+doubleclick.net
+tracking.facebook.com
+PRTG Network Monitor
+
+PRTG được sử dụng để giám sát trạng thái thiết bị mạng và server.
+
+Các thông tin được theo dõi:
 
 trạng thái server
 
 độ trễ mạng (latency)
 
-CPU và RAM
+CPU usage
 
-thời gian phản hồi DNS
+RAM usage
+
+DNS response time
+
+bandwidth
 
 Các sensor được sử dụng:
 
@@ -86,24 +119,9 @@ DNS Sensor
 
 Bandwidth Sensor
 
-## Lọc DNS và chặn quảng cáo
+Grafana Dashboard
 
-Pi-hole hoạt động như DNS server nội bộ giúp:
-
-chặn quảng cáo toàn mạng
-
-chặn domain tracking
-
-ghi log truy vấn DNS
-
-Ví dụ domain bị chặn:
-
-ads.google.com
-doubleclick.net
-tracking.facebook.com
-## Dashboard giám sát
-
-Grafana được sử dụng để tạo dashboard trực quan cho hệ thống.
+Grafana được sử dụng để tạo dashboard giám sát trực quan.
 
 Dashboard hiển thị:
 
@@ -113,11 +131,13 @@ DNS queries
 
 blocked domains
 
-độ trễ mạng
+network latency
 
 Điều này giúp dễ dàng quan sát và phân tích hệ thống.
 
-## Hệ thống cảnh báo
+Telegram Alert System
+
+Hệ thống cảnh báo được tích hợp với Telegram Bot.
 
 Khi PRTG phát hiện sự cố:
 
@@ -128,14 +148,14 @@ Chạy script cảnh báo
 Telegram Bot gửi thông báo
 
 Ví dụ thông báo:
+
 ⚠ Network Alert
 
 Device: Pi-hole Server
 Status: DOWN
 Time: 22:40
-
-## Demo
-1️. Thiết bị bị tắt
+Demo hệ thống
+Thiết bị bị tắt
 
 Tắt server Pi-hole.
 
@@ -145,7 +165,7 @@ PRTG phát hiện thiết bị offline
 
 Telegram gửi cảnh báo ngay lập tức
 
-2. Test chặn quảng cáo
+Test chặn quảng cáo
 
 Truy cập website có quảng cáo.
 
@@ -153,9 +173,9 @@ Kết quả:
 
 Pi-hole chặn domain quảng cáo
 
-log DNS hiển thị domain bị block
+DNS log hiển thị domain bị block
 
-## Quan sát dashboard
+Quan sát dashboard
 
 Mở dashboard Grafana để xem:
 
@@ -165,21 +185,4 @@ trạng thái thiết bị
 
 độ trễ mạng
 
-### Cấu trúc project
-home-network-monitoring-lab
-│
-├── README.md
-│
-├── architecture
-│   └── network-diagram.png
-│
-├── screenshots
-│   ├── grafana-dashboard.png
-│   ├── pihole-dashboard.png
-│   └── prtg-dashboard.png
-│
-├── scripts
-│   └── telegram-alert.ps1
-│
-└── docs
-    └── setup-guide.md
+Dashboard giúp theo dõi hệ thống mạng một cách trực quan và dễ dàng phân tích sự cố.
