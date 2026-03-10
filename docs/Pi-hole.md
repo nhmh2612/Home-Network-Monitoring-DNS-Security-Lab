@@ -1,16 +1,24 @@
-# Đăng nhập
+# Pi-hole DNS Configuration Guide
+
+## Đăng nhập
+
 ![Login](../diagrams/login.png)
 
+---
 
-# Dashboard
-Sau khi đăng nhập, ta vào được trang dashboard
+## Dashboard
+
+Sau khi đăng nhập thành công, ta sẽ vào trang **Dashboard** của Pi-hole để theo dõi tình trạng DNS, số lượng truy vấn và các domain bị chặn.
+
 ![Dashboard](../diagrams/dashboard.png)
+
+---
 
 # 1. Upstream DNS Servers
 
-Khuyến nghị sử dụng Cloudflare DNS hoặc Quad9 DNS.
+Khuyến nghị sử dụng **Cloudflare DNS** hoặc **Quad9 DNS**.
 
-Cấu hình phổ biến (khuyên dùng)
+## Cấu hình phổ biến (khuyên dùng)
 
 Tick:
 
@@ -21,17 +29,15 @@ IPv4 DNS:
 1.1.1.1
 1.0.0.1
 
-Lý do:
+### Lý do
 
-	+ tốc độ rất nhanh
+- tốc độ rất nhanh
+- bảo vệ quyền riêng tư tốt
+- độ ổn định cao
 
-	+ bảo vệ quyền riêng tư tốt
+---
 
-	+ độ ổn định cao
-
-	+ Screenshot:
-
-Cấu hình bảo mật cao hơn
+## Cấu hình bảo mật cao hơn
 
 Tick:
 
@@ -42,18 +48,19 @@ DNS:
 9.9.9.9
 149.112.112.112
 
-Quad9 có malware filtering giúp chặn domain độc hại.
+Quad9 có **malware filtering** giúp chặn domain độc hại.
 
-![Các mục cần chọn](../diagrams/upstream.png)
+![Upstream DNS](../diagrams/upstream.png)
 
-## Lưu ý
+### Lưu ý
 
 Không nên chọn quá nhiều upstream DNS cùng lúc.
 
-Chỉ nên:
+Khuyến nghị:
 
 1 – 2 upstream DNS server
 
+---
 
 # 2. Pi-hole Domain Name
 
@@ -63,13 +70,15 @@ lan
 
 Thiết bị trong mạng sẽ có dạng:
 
-laptop.lan
-phone.lan
-printer.lan
+laptop.lan  
+phone.lan  
+printer.lan  
 
-Điều này rất hữu ích để dễ dàng quan sát và bảo trì hơn.
+Điều này giúp dễ dàng quản lý và quan sát các thiết bị trong mạng nội bộ.
 
-![Tên domain](../diagrams/domain.png)
+![Domain Name](../diagrams/domain.png)
+
+---
 
 # 3. Expand Hostnames
 
@@ -81,26 +90,28 @@ Pi-hole sẽ tự động hiển thị hostname dạng:
 
 hostname.lan
 
-Thay vì chỉ hiển thị IP.
+Thay vì chỉ hiển thị địa chỉ IP.
 
+---
 
 # 4. Rate Limiting
 
-Giữ mặc định:
+Giữ cấu hình mặc định:
 
-1000 queries
-60 seconds
+1000 queries  
+60 seconds  
 
-Mục đích:
+### Mục đích
 
-chống spam DNS
+- chống spam DNS
+- tránh DNS flooding
+- bảo vệ server khỏi quá tải
 
-tránh DNS flooding
+Thông thường **không cần thay đổi cấu hình này**.
 
-Không cần thay đổi.
+![Rate Limiting](../diagrams/ratelimit.png)
 
-
-![Giới hạn lượt truy cập](../diagrams/ratelimit.png)
+---
 
 # 5. Interface Settings
 
@@ -108,7 +119,7 @@ Chọn:
 
 Allow only local requests
 
-Đây là setting an toàn nhất .
+Đây là **cấu hình an toàn nhất cho homelab**.
 
 Không nên chọn:
 
@@ -118,27 +129,26 @@ Vì sẽ biến Pi-hole thành:
 
 Open DNS Resolver
 
-→ dễ bị abuse.
+→ dễ bị lạm dụng cho DNS amplification attack.
 
-![ Interface Settings](../diagrams/is.png)
+![Interface Settings](../diagrams/is.png)
 
+---
 
 # 6. Advanced DNS Settings
 
-Khuyến nghị bật:
+Khuyến nghị bật các tùy chọn sau:
 
-Never forward non-FQDN queries
-Never forward reverse lookups for private IP ranges
+Never forward non-FQDN queries  
+Never forward reverse lookups for private IP ranges  
 
-Lợi ích:
+### Lợi ích
 
-tăng privacy
+- tăng quyền riêng tư
+- giảm truy vấn DNS không cần thiết
+- tối ưu quá trình phân giải DNS
 
-giảm query rác
-
-tối ưu DNS resolution
-
-
+---
 
 # 7. DNSSEC
 
@@ -148,44 +158,59 @@ Enable DNSSEC
 
 DNSSEC giúp:
 
-chống DNS Spoofing
-
-xác thực DNS response
+- chống **DNS Spoofing**
+- xác thực **DNS response**
+- tăng độ tin cậy của hệ thống DNS
 
 Lưu ý: chỉ bật khi upstream DNS hỗ trợ DNSSEC.
 
 Các DNS hỗ trợ:
 
-Cloudflare
-
-Quad9
+- Cloudflare
+- Quad9
 
 ![DNSSEC](../diagrams/DNSSEC.png)
 
-# 8. Query Log 
+---
 
-Ví dụ query trong Pi-hole:
+# 8. Query Log
 
-doubleclick.net  → blocked
-google.com       → allowed
-facebook.com     → allowed
+Ví dụ một số truy vấn DNS trong Pi-hole:
 
-![Query trong Pi-hole](../diagrams/querylog.png)
+doubleclick.net  → blocked  
+google.com       → allowed  
+facebook.com     → allowed  
+
+![Query Log](../diagrams/querylog.png)
+
+---
 
 # 9. Network Clients
 
-Ví dụ các thiết bị trong mạng:
+Ví dụ các thiết bị trong mạng nội bộ:
 
-192.168.1.5  laptop.lan
-192.168.1.6  phone.lan
-192.168.1.7  tv.lan
+192.168.1.5   laptop.lan  
+192.168.1.6   phone.lan  
+192.168.1.7   tv.lan  
 
 Tính năng này giúp:
 
-theo dõi thiết bị
-
-kiểm tra DNS traffic
-
-phát hiện thiết bị bất thường
+- theo dõi thiết bị trong mạng
+- kiểm tra DNS traffic của từng client
+- phát hiện thiết bị bất thường
 
 ![Network Clients](../diagrams/client.png)
+
+---
+
+# Kết luận
+
+Hệ thống **Pi-hole DNS Filtering** mang lại nhiều lợi ích cho mạng gia đình:
+
+- chặn quảng cáo và tracker
+- tăng bảo mật DNS
+- giám sát hoạt động mạng
+- quản lý thiết bị trong LAN
+
+"""
+
